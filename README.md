@@ -9,21 +9,21 @@ This repo holds the code used to create the Little Lemon app for the [Create the
 
 These are not part of the course and will be added later.
 
-[Screenshots of the Little Lemon app's Home and Profile screens](https://raw.githubusercontent.com/NSMau/Little-Lemon-SwiftUI-App/main/preview/little-lemo-design-annotations-stubs.jpg)
+![Screenshots of the Little Lemon app's Home and Profile screens](https://raw.githubusercontent.com/NSMau/Little-Lemon-SwiftUI-App/main/preview/little-lemo-design-annotations-stubs.jpg)
 
 ### Menu
 
 This is not part of the course but I added them to practice more.
 
-[Screenshots of the Little Lemon app's Menu screens](https://raw.githubusercontent.com/NSMau/Little-Lemon-SwiftUI-App/main/preview/little-lemo-design-annotations-menu.jpg)
+![Screenshots of the Little Lemon app's Menu screens](https://raw.githubusercontent.com/NSMau/Little-Lemon-SwiftUI-App/main/preview/little-lemo-design-annotations-menu.jpg)
 
 ### Reservations
 
-[Screenshots of the Little Lemon app's Reservations screens](https://raw.githubusercontent.com/NSMau/Little-Lemon-SwiftUI-App/main/preview/little-lemo-design-annotations-reservation.jpg)
+![Screenshots of the Little Lemon app's Reservations screens](https://raw.githubusercontent.com/NSMau/Little-Lemon-SwiftUI-App/main/preview/little-lemo-design-annotations-reservation.jpg)
 
 ### Locations
 
-[Screenshots of the Little Lemon app's Locations screens](https://raw.githubusercontent.com/NSMau/Little-Lemon-SwiftUI-App/main/preview/little-lemo-design-annotations-locations.jpg)
+![Screenshots of the Little Lemon app's Locations screens](https://raw.githubusercontent.com/NSMau/Little-Lemon-SwiftUI-App/main/preview/little-lemo-design-annotations-locations.jpg)
 
 ## Live Demo
 
