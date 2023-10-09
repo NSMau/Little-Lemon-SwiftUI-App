@@ -24,6 +24,8 @@
 		B32574CF2ACADF6D00D0210B /* MenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32574CE2ACADF6D00D0210B /* MenuItemView.swift */; };
 		B32574D52AD065EE00D0210B /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32574D42AD065EE00D0210B /* Data.swift */; };
 		B32574D72AD0964800D0210B /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32574D62AD0964800D0210B /* LocationView.swift */; };
+		B3DF22082AD4607D00D2E5D0 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF22072AD4607D00D2E5D0 /* Validation.swift */; };
+		B3DF220A2AD48B6200D2E5D0 /* ReservationConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF22092AD48B6200D2E5D0 /* ReservationConfirmationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		B32574CE2ACADF6D00D0210B /* MenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemView.swift; sourceTree = "<group>"; };
 		B32574D42AD065EE00D0210B /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		B32574D62AD0964800D0210B /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
+		B3DF22072AD4607D00D2E5D0 /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
+		B3DF22092AD48B6200D2E5D0 /* ReservationConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationConfirmationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,9 +93,11 @@
 				B32574B42AC20DED00D0210B /* Menu.swift */,
 				B32574D42AD065EE00D0210B /* Data.swift */,
 				B32574AC2AC20AC500D0210B /* ReservationView.swift */,
+				B3DF22092AD48B6200D2E5D0 /* ReservationConfirmationView.swift */,
 				B32574AE2AC20AE300D0210B /* LocationsView.swift */,
 				B32574D62AD0964800D0210B /* LocationView.swift */,
 				B32574B02AC20B0700D0210B /* ProfileView.swift */,
+				B3DF22072AD4607D00D2E5D0 /* Validation.swift */,
 				B32574BC2AC2208B00D0210B /* Fonts */,
 				B325749C2AC207A300D0210B /* Assets.xcassets */,
 				B325749E2AC207A300D0210B /* Preview Content */,
@@ -189,11 +195,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B32574D72AD0964800D0210B /* LocationView.swift in Sources */,
+				B3DF220A2AD48B6200D2E5D0 /* ReservationConfirmationView.swift in Sources */,
 				B32574A92AC20A4500D0210B /* HomeView.swift in Sources */,
 				B32574AB2AC20AA300D0210B /* MenuView.swift in Sources */,
 				B32574CF2ACADF6D00D0210B /* MenuItemView.swift in Sources */,
 				B32574AD2AC20AC500D0210B /* ReservationView.swift in Sources */,
 				B32574AF2AC20AE300D0210B /* LocationsView.swift in Sources */,
+				B3DF22082AD4607D00D2E5D0 /* Validation.swift in Sources */,
 				B32574CB2ACA1F1500D0210B /* CategoryItemsView.swift in Sources */,
 				B32574C72AC3094E00D0210B /* ScreenHeadingView.swift in Sources */,
 				B325749B2AC207A000D0210B /* ContentView.swift in Sources */,

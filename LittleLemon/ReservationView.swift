@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ReservationView: View {
     @State private var reservation = Reservation(
@@ -14,19 +15,30 @@ struct ReservationView: View {
         numberOfCustomers: 2,
         date: Date(),
         time: Date(),
-        location: "Downtown",
+        location: "Cole Valley",
         needsChildSeat: false,
         notes: "",
         status: .Pending
     )
+    @State private var showReservartionConfirmation = false
     
     // Controls whether the Additional Notes section should be collapsed or expanded.
     @State var isAdditionalNotesCollapsed = true
     
+    @State private var isValidName = true
+    @State private var isValidEmail = true
+    @State private var isValidPhoneNumber = true
+    
+    private enum InvalidFormErrorMessage: String {
+        case FullName = "Please enter your full name."
+        case Email = "Please enter a valid email."
+        case PhoneNumber = "Please enter a valid phone number."
+    }
+    
     let locations = Data.littleLemonData.getLocationNames().sorted()
     
     /// Returns a fixed, closed date range from today to one year from today, which represents the date window within customers can place reservations.
-    let reservationDateWindow: ClosedRange<Date> = {
+    private let reservationDateWindow: ClosedRange<Date> = {
         let calendar = Calendar.current
         let today = Date()
         let oneYearFromToday = calendar.date(byAdding: .year, value: 1, to: today)!
@@ -35,7 +47,7 @@ struct ReservationView: View {
     }()
     
     /// Returns a fixed, closed date range from 11:00AM to 11:00PM, which represents the time window within customers can place reservations.
-    let reservationTimeWindow: ClosedRange<Date> = {
+    private let reservationTimeWindow: ClosedRange<Date> = {
         let calendar = Calendar.current
         let today = Date()
         
@@ -72,19 +84,34 @@ struct ReservationView: View {
                 VStack {
                     Form {
                         Section {
-                            TextField("Name", text: $reservation.reservee.name)
-                            TextField("Email", text: $reservation.reservee.email)
-                                .keyboardType(.emailAddress)
-                                .textInputAutocapitalization(.never)
-                            TextField("Phone Number", text: $reservation.reservee.phoneNumber)
-                                .keyboardType(.phonePad)
-                                // Limit the input to ten characters
-                                .onChange(
-                                    of: reservation.reservee.phoneNumber,
-                                    perform: { newValue in
-                                        reservation.reservee.phoneNumber = String(newValue.prefix(10))
-                                    }
-                                )
+                            VStack(alignment: .leading, spacing: 0) {
+                                TextField("Name", text: $reservation.reservee.name)
+                                    .padding(.top, 12)
+                                ErrorMessageTextField(errorMessage: InvalidFormErrorMessage.FullName.rawValue, hideErrorMessage: $isValidName)
+                                    .padding(.top, isValidName ? -8 : 0)
+                            }
+                            VStack(alignment: .leading, spacing: 0) {
+                                TextField("Email", text: $reservation.reservee.email)
+                                    .keyboardType(.emailAddress)
+                                    .textInputAutocapitalization(.never)
+                                    .padding(.top, 12)
+                                ErrorMessageTextField(errorMessage: InvalidFormErrorMessage.Email.rawValue, hideErrorMessage: $isValidEmail)
+                                    .padding(.top, isValidEmail ? -8 : 0)
+                            }
+                            VStack(alignment: .leading, spacing: 0) {
+                                TextField("Phone Number", text: $reservation.reservee.phoneNumber)
+                                    .padding(.top, 12)
+                                    .keyboardType(.phonePad)
+                                    // Limit the input to ten characters
+                                    .onChange(
+                                        of: reservation.reservee.phoneNumber,
+                                        perform: { newValue in
+                                            reservation.reservee.phoneNumber = String(newValue.prefix(10))
+                                        }
+                                    )
+                                ErrorMessageTextField(errorMessage: InvalidFormErrorMessage.PhoneNumber.rawValue, hideErrorMessage: $isValidPhoneNumber)
+                                    .padding(.top, isValidPhoneNumber ? -8 : 0)
+                            }
                         } header: {
                             Text("Customer Information")
                                 .font(.custom("MierB-Regular", size: 16))
@@ -106,7 +133,7 @@ struct ReservationView: View {
                             
                             DatePicker(
                                 "Time",
-                                selection: $reservation.date,
+                                selection: $reservation.time,
                                 in: reservationTimeWindow,
                                 displayedComponents: .hourAndMinute
                             )
@@ -137,20 +164,20 @@ struct ReservationView: View {
                             }
                         }
                         
-                        // TODO: Investigate how to avoid this work-around so the button fills the entire row container without any visible background color
                         Section {
-                            Text("")
-                        }
-                        .listRowBackground(
                             Button(action: processReservation) {
                                 Text("CONTINUE")
-                                    .frame(minWidth: 0, maxWidth: .infinity, maxHeight: 28)
+                                    .frame(minWidth: 0, maxWidth: .infinity, maxHeight: 32)
                                     .font(.custom("Phudu-SemiBold", size: 20))
                             }
                             .buttonStyle(.borderedProminent)
                             .disabled(isFormFilledOut())
-                        )
-                        .listRowInsets(EdgeInsets()) // Remove Section's horizontal spacing
+                            .sheet(isPresented: $showReservartionConfirmation) {
+                                ReservationConfirmationView(reservation: reservation)
+                            }
+                        }
+                        .listRowInsets(EdgeInsets())
+                        
                     }
                     .font(.custom("MierB-Regular", size: 18))
                 }
@@ -159,8 +186,8 @@ struct ReservationView: View {
         }
     }
     
-    // For the sake of simplicity, I'm considering the form to be filled out when the user
-    // provides a name, email, and phone number, thus enabling the CONTINUE button.
+    // For the sake of simplicity, I'm considering the form to be filled out when the user provides
+    // a name, email, and phone number, thus enabling the CONTINUE button.
     // TODO: Validate whether the user selected a time different than the current one.
     private func isFormFilledOut() -> Bool {
         reservation.reservee.name.isEmpty ||
@@ -168,36 +195,29 @@ struct ReservationView: View {
         reservation.reservee.phoneNumber.count != 10
     }
     
-    // TODO: Extend form validation for all fields and constraints.
-    private func validateForm() -> Bool {
-        // For the sake of simplicity, I'm limiting the form validation to
-        // the name, email, and phone number fields.
+    // For simplicity reasons, I'm limiting form validation to the name, email, and phone number
+    // input fields.
+    private func isValidForm() -> Bool {
+        isValidName = LittleLemon.isValidFullName(reservation.reservee.name)
+        isValidEmail = LittleLemon.isValidEmail(reservation.reservee.email)
+        isValidPhoneNumber = LittleLemon.isValidPhoneNumber(reservation.reservee.phoneNumber)
         
-        // TODO: User must provide a first and last name
-        if !reservation.reservee.name.contains(" ") {
-            // TODO: Show alert!
-        }
-        
-        if !reservation.reservee.email.contains("@") {
-            // TODO: Show alert!
-        }
-        
-        if (
-            reservation.reservee.name.isEmpty ||
-            reservation.reservee.email.isEmpty ||
-            reservation.reservee.phoneNumber.count != 10
-        ) { return false }
-        
-        return true
+        return isValidName && isValidEmail && isValidPhoneNumber
     }
     
     private func processReservation() {
-        print("Processed")
+        let isValidForm = isValidForm()
+        
+        if isValidForm {
+            reservation.status = .Reserved
+            
+            showReservartionConfirmation = true
+        }
     }
 
 }
 
-private struct Reservation {
+struct Reservation {
     let id: UUID
     var reservee: Reservee
     var numberOfCustomers: Int
@@ -206,17 +226,31 @@ private struct Reservation {
     var location: String
     var needsChildSeat: Bool
     var notes: String
-    let status: ReservationStatus
+    var status: ReservationStatus
 }
 
-private struct Reservee {
+struct Reservee {
     var name: String
     var email: String
     var phoneNumber: String
 }
 
-private enum ReservationStatus {
+enum ReservationStatus {
     case Cancelled, Fulfilled, Pending, Reserved
+}
+
+private struct ErrorMessageTextField: View {
+    @State var errorMessage: String
+    @Binding var hideErrorMessage: Bool
+    
+    var body: some View {
+        !hideErrorMessage ?
+            Text(errorMessage)
+                .font(.custom("MierB-Regular", size: 16))
+                .foregroundColor(.red) :
+            Text("")
+                .font(.custom("MierB-Regular", size: 1))
+    }
 }
 
 /// Creates a collapsable header for a section.
@@ -234,7 +268,7 @@ private struct CollapsableSectionHeader: View {
         }, label: {
             isOn ? Text(Image(systemName: iconWhenShown)) : Text(Image(systemName: iconWhenHidden))
         })
-        .font(Font.caption)
+        .font(.caption)
         .foregroundColor(.accentColor)
         .frame(maxWidth: .infinity, alignment: .trailing)
         .overlay(
@@ -250,3 +284,4 @@ struct ReservationView_Previews: PreviewProvider {
         ReservationView()
     }
 }
+
